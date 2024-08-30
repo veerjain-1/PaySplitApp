@@ -34,6 +34,7 @@ PaySplit is a modern web application designed to help users track and manage sha
 
 ## Project Structure
 
+```plaintext
 project-root/
 ├── backend/
 │   ├── src/
