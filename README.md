@@ -32,30 +32,6 @@ PaySplit is a modern web application designed to help users track and manage sha
 - **Babel**: JavaScript compiler for using modern JavaScript features.
 - **Jest**: Testing framework for ensuring code reliability.
 
-## Project Structure
-
-
-
-project-root/
-├── backend/
-│   ├── src/
-│   │   ├── models/          # Mongoose models
-│   │   ├── routes/          # Express routes
-│   │   ├── controllers/     # Route handlers
-│   │   ├── config/          # Configuration files (db, auth, etc.)
-│   │   └── app.js           # Main application file
-│   ├── Dockerfile           # Dockerfile for backend
-│   └── docker-compose.yml   # Docker Compose file
-├── frontend/
-│   ├── src/
-│   │   ├── components/      # React components
-│   │   ├── redux/           # Redux setup
-│   │   ├── services/        # API service files
-│   │   └── App.js           # Main React app file
-│   ├── Dockerfile           # Dockerfile for frontend
-│   └── public/              # Public assets
-└── README.md                # Project documentation
-
 
 
 
@@ -85,3 +61,32 @@ We welcome contributions to PaySplit! Please follow these guidelines:
 
 
 For any questions or inquiries, please contact me at jainveer321@gmail.com
+
+
+
+
+## Project Structure
+
+```plaintext
+
+project-root/
+├── backend/
+│   ├── src/
+│   │   ├── models/          # Mongoose models
+│   │   ├── routes/          # Express routes
+│   │   ├── controllers/     # Route handlers
+│   │   ├── config/          # Configuration files (db, auth, etc.)
+│   │   └── app.js           # Main application file
+│   ├── Dockerfile           # Dockerfile for backend
+│   └── docker-compose.yml   # Docker Compose file
+├── frontend/
+│   ├── src/
+│   │   ├── components/      # React components
+│   │   ├── redux/           # Redux setup
+│   │   ├── services/        # API service files
+│   │   └── App.js           # Main React app file
+│   ├── Dockerfile           # Dockerfile for frontend
+│   └── public/              # Public assets
+└── README.md                # Project documentation
+
+
