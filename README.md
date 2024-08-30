@@ -56,6 +56,7 @@ project-root/
 
 
 
+
 ## Features
 
 - **User Authentication**: Secure sign-up and login using Firebase Authentication.
@@ -76,3 +77,64 @@ project-root/
    ```bash
    git clone https://github.com/your-username/paysplit.git
    cd paysplit/backend
+Install dependencies:
+
+bash
+Copy code
+npm install
+Configure environment variables:
+
+Create a .env file in the backend directory.
+Add your MongoDB connection string and Firebase configuration.
+Start the backend server:
+
+bash
+Copy code
+npm start
+Frontend Setup
+Navigate to the frontend directory:
+
+bash
+Copy code
+cd ../frontend
+Install dependencies:
+
+bash
+Copy code
+npm install
+Configure environment variables:
+
+Create a .env file in the frontend directory.
+Add Firebase configuration and API endpoints.
+Start the development server:
+
+bash
+Copy code
+npm start
+Docker Setup (Optional)
+Build and start containers:
+
+bash
+Copy code
+docker-compose up --build
+Access the app at http://localhost:3000.
+
+Testing
+Backend: Use Postman to test API endpoints.
+Frontend: Run unit tests with Jest:
+bash
+Copy code
+cd ../frontend
+npm test
+Contributing
+We welcome contributions to PaySplit! Please follow these guidelines:
+
+Fork the repository.
+Create a feature branch.
+Make your changes and add tests if applicable.
+Submit a pull request with a clear description of your changes.
+Contact
+For any questions or inquiries, please contact us at [your-email@example.com].
+
+License
+This project is licensed under the MIT License. See the LICENSE file for details.
