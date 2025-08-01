@@ -60,7 +60,7 @@ We welcome contributions to PaySplit! Please follow these guidelines:
 
 
 
-For any questions or inquiries, please contact me at jainveer321@gmail.com
+For any questions or inquiries, please contact me at jainveer321@gmail.com or jain621@purdue.edu
 
 
 
