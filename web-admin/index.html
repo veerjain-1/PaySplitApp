@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="paySplitAdmin">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaySplit Admin Dashboard</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f4f7f6; padding: 20px; }
+        .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        h1 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; }
+        button { background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body ng-controller="MainController">
+
+    <h1>PaySplit Admin Dashboard</h1>
+    
+    <div class="card">
+        <h2>System Status</h2>
+        <p><strong>Backend API:</strong> <span ng-style="{'color': backendStatus === 'Online' ? 'green' : 'red'}">{{backendStatus}}</span></p>
+        <p><strong>AI Pipeline:</strong> <span ng-style="{'color': aiStatus === 'Online' ? 'green' : 'red'}">{{aiStatus}}</span></p>
+        <button ng-click="checkHealth()">Refresh Status</button>
+    </div>
+
+    <div class="card">
+        <h2>Recent Expenses</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Amount</th>
+                    <th>Payer ID</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="exp in expenses">
+                    <td>{{exp.title}}</td>
+                    <td>${{exp.amount.toFixed(2)}}</td>
+                    <td>{{exp.payerId}}</td>
+                    <td>{{exp.createdAt | date:'medium'}}</td>
+                </tr>
+                <tr ng-if="expenses.length === 0">
+                    <td colspan="4" style="text-align: center;">No expenses found.</td>
+                </tr>
+            </tbody>
+        </table>
+        <br/>
+        <button ng-click="loadExpenses()">Reload Expenses</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
