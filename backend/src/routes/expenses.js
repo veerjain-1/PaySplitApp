@@ -1,33 +1,39 @@
 const express = require('express');
 const router = express.Router();
-
-// Mock in-memory store since MongoDB might not be running locally
-const expenses = [];
+const Expense = require('../models/Expense');
 
 // Create an expense
-router.post('/', (req, res) => {
-    const { title, amount, payerId, splitAmong } = req.body;
-    
-    if (!title || !amount || !payerId) {
-        return res.status(400).json({ error: 'Missing required fields' });
+router.post('/', async (req, res) => {
+    try {
+        const { title, amount, payerId, groupId, splitType, splits } = req.body;
+        
+        const expense = new Expense({
+            title,
+            amount,
+            payerId,
+            groupId,
+            splitType: splitType || 'EQUAL',
+            splits: splits || []
+        });
+        
+        const savedExpense = await expense.save();
+        res.status(201).json(savedExpense);
+    } catch (error) {
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({ error: error.message });
+        }
+        res.status(500).json({ error: 'Server error creating expense' });
     }
-
-    const expense = {
-        id: Date.now().toString(),
-        title,
-        amount,
-        payerId,
-        splitAmong: splitAmong || [],
-        createdAt: new Date().toISOString()
-    };
-    
-    expenses.push(expense);
-    res.status(201).json(expense);
 });
 
 // Get all expenses
-router.get('/', (req, res) => {
-    res.status(200).json(expenses);
+router.get('/', async (req, res) => {
+    try {
+        const expenses = await Expense.find().sort({ createdAt: -1 });
+        res.status(200).json(expenses);
+    } catch (error) {
+        res.status(500).json({ error: 'Server error fetching expenses' });
+    }
 });
 
 // Process receipt via AI pipeline (Mocking the connection to Python microservice)

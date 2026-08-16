@@ -26,7 +26,12 @@ mongoose.connect(MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log('MongoDB connection error (ignoring for dev):', err.message));
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// Start server only if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+module.exports = app;
