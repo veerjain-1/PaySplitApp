@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 // Load env vars
 dotenv.config();
 
+const logger = require('./utils/logger');
+
 const app = express();
 
 // Middleware
@@ -23,14 +25,14 @@ app.get('/health', (req, res) => {
 // Mock MongoDB Connection for simplicity
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/paysplit';
 mongoose.connect(MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log('MongoDB connection error (ignoring for dev):', err.message));
+  .then(() => logger.info('MongoDB connected'))
+  .catch(err => logger.warn('MongoDB connection error (ignoring for dev):', err.message));
 
 // Start server only if not in test mode
 if (process.env.NODE_ENV !== 'test') {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        logger.info(`Server running on port ${PORT}`);
     });
 }
 
