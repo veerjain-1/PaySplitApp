@@ -21,8 +21,8 @@ jobs:
           cache: 'npm'
           cache-dependency-path: backend/package-lock.json
       - run: npm ci
+      - run: npm run lint
       # To be added next time:
-      # - run: npm run lint
       # - run: npm test
 
   mobile-ci:
@@ -39,8 +39,8 @@ jobs:
           cache: 'npm'
           cache-dependency-path: mobile/package-lock.json
       - run: npm ci
+      - run: npm run lint
       # To be added next time:
-      # - run: npm run lint
       # - run: npm test
       - name: Expo Check
         run: npx expo export --dry-run
