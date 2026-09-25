@@ -21,5 +21,9 @@
   "devDependencies": {
     "husky": "^9.1.7",
     "lint-staged": "^17.5.1"
+  },
+  "lint-staged": {
+    "backend/**/*.js": "npm --prefix backend run lint -- --fix",
+    "mobile/**/*.{js,jsx,ts,tsx}": "npm --prefix mobile run lint -- --fix"
   }
 }
