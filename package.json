@@ -21,7 +21,7 @@
   "homepage": "https://github.com/veerjain-1/PaySplitApp#readme",
   "devDependencies": {
     "husky": "^9.1.7",
-    "lint-staged": "^17.5.1"
+    "lint-staged": "^17.6.0"
   },
   "lint-staged": {
     "backend/**/*.js": "npm --prefix backend run lint -- --fix",
