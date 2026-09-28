@@ -1,0 +1,4 @@
+{
+  "backend/**/*.{js,ts}": ["npm run lint --prefix backend", "npm run format --prefix backend"],
+  "mobile/**/*.{js,ts,tsx}": ["npm run lint --prefix mobile", "npm run format --prefix mobile"]
+}
