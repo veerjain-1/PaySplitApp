@@ -16,9 +16,9 @@ router.post('/', async (req, res) => {
 // Get all recurring expenses for a specific group
 router.get('/group/:groupId', async (req, res) => {
   try {
-    const expenses = await RecurringExpense.find({ 
+    const expenses = await RecurringExpense.find({
       groupId: req.params.groupId,
-      isActive: true
+      isActive: true,
     }).populate('paidBy splits.user', 'username email');
     res.json(expenses);
   } catch (error) {

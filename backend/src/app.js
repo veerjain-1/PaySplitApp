@@ -24,20 +24,21 @@ app.use('/api/expenses', expenseRoutes);
 app.use('/api/recurring-expenses', recurringExpensesRoutes);
 
 app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'ok', service: 'paysplit-backend' });
+  res.status(200).json({ status: 'ok', service: 'paysplit-backend' });
 });
 
 // Start server and connect to DB only if not in test mode
 if (process.env.NODE_ENV !== 'test') {
-    const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/paysplit';
-    mongoose.connect(MONGO_URI)
-      .then(() => logger.info('MongoDB connected'))
-      .catch(err => logger.warn('MongoDB connection error (ignoring for dev):', err.message));
+  const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/paysplit';
+  mongoose
+    .connect(MONGO_URI)
+    .then(() => logger.info('MongoDB connected'))
+    .catch((err) => logger.warn('MongoDB connection error (ignoring for dev):', err.message));
 
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
-        logger.info(`Server running on port ${PORT}`);
-    });
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    logger.info(`Server running on port ${PORT}`);
+  });
 }
 
 module.exports = app;

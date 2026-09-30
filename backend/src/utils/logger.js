@@ -11,7 +11,7 @@ const logger = {
     if (process.env.NODE_ENV === 'development') {
       console.log(`[DEBUG] ${new Date().toISOString()} - ${msg}`, ...args);
     }
-  }
+  },
 };
 
 module.exports = logger;
