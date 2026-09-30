@@ -22,8 +22,7 @@ jobs:
           cache-dependency-path: backend/package-lock.json
       - run: npm ci
       - run: npm run lint
-      # To be added next time:
-      # - run: npm test
+      - run: npm test
 
   mobile-ci:
     runs-on: ubuntu-latest
