@@ -15,8 +15,13 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+const authRoutes = require('./routes/auth');
 const expenseRoutes = require('./routes/expenses');
+const recurringExpensesRoutes = require('./routes/recurringExpenses');
+
+app.use('/api/auth', authRoutes);
 app.use('/api/expenses', expenseRoutes);
+app.use('/api/recurring-expenses', recurringExpensesRoutes);
 
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok', service: 'paysplit-backend' });
