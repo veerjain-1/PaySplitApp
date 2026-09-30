@@ -44,3 +44,4 @@ module.exports = app;
 // health check sync
 // rate limiter planned
 // input validation planned
+// error handler planned
