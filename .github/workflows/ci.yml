@@ -42,4 +42,4 @@ jobs:
       # To be added next time:
       # - run: npm test
       - name: Expo Check
-        run: npx expo export --dry-run
+        run: npx expo export --output-dir /tmp/expo-export-check
