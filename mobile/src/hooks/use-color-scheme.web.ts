@@ -8,6 +8,12 @@ export function useColorScheme() {
   const [hasHydrated, setHasHydrated] = useState(false);
 
   useEffect(() => {
+    // Intentional one-time hydration-gate setState: this effect exists
+    // specifically to defer to the client-rendered color scheme after
+    // the static/SSR pass, which is the documented escape hatch for the
+    // "no setState in effect" rule (it only applies to synchronizing
+    // state *every* render, not a single post-hydration flip).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHasHydrated(true);
   }, []);
 
