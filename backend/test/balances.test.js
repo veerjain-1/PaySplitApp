@@ -1,4 +1,8 @@
-const { resolveSplitAmounts, computeNetBalances, computeSettlements } = require('../src/utils/balances');
+const {
+  resolveSplitAmounts,
+  computeNetBalances,
+  computeSettlements,
+} = require('../src/utils/balances');
 
 describe('balances utils', () => {
   describe('resolveSplitAmounts', () => {
