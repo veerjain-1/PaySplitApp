@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Expense = require('../models/Expense');
+const { getIo } = require('../socket');
 
 // Create an expense
 router.post('/', async (req, res) => {
@@ -17,6 +18,11 @@ router.post('/', async (req, res) => {
     });
 
     const savedExpense = await expense.save();
+    // Emit real‑time notification
+    const io = getIo();
+    if (io) {
+      io.emit('expenseCreated', savedExpense);
+    }
     res.status(201).json(savedExpense);
   } catch (error) {
     if (error.name === 'ValidationError') {

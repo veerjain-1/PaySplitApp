@@ -4,6 +4,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const express = require('express');
 const recurringExpensesRouter = require('../src/routes/recurringExpenses');
 const RecurringExpense = require('../src/models/RecurringExpense');
+require('../src/models/User');
 
 const app = express();
 app.use(express.json());
@@ -27,48 +28,59 @@ afterEach(async () => {
 
 describe('RecurringExpense Model & API', () => {
   it('should calculate the next date correctly on save (monthly)', async () => {
+    const groupId = new mongoose.Types.ObjectId();
+    const paidBy = new mongoose.Types.ObjectId();
     const expense = new RecurringExpense({
-      title: 'Netflix',
+      groupId,
+      paidBy,
       amount: 15.99,
-      interval: 'monthly',
-      startDate: new Date('2026-09-01T00:00:00.000Z'),
-      creatorId: new mongoose.Types.ObjectId(),
+      frequency: 'monthly',
+      nextBillingDate: new Date('2026-09-01T00:00:00.000Z'),
+      splits: [{ user: paidBy, amount: 15.99 }],
     });
 
-    await expense.save();
-
-    expect(expense.nextDate).toBeDefined();
+    const nextDate = expense.calculateNextDate(new Date('2026-09-01T00:00:00.000Z'));
+    expect(nextDate).toBeDefined();
     // 1 month after Sept 1 is Oct 1
-    expect(expense.nextDate.toISOString()).toBe(new Date('2026-10-01T00:00:00.000Z').toISOString());
+    expect(nextDate.toISOString()).toBe(new Date('2026-10-01T00:00:00.000Z').toISOString());
+    await expense.save();
+    expect(expense._id).toBeDefined();
   });
 
   it('should create a new recurring expense via POST /', async () => {
-    const creatorId = new mongoose.Types.ObjectId().toString();
-    const res = await request(app).post('/api/recurring-expenses').send({
-      title: 'Spotify',
-      amount: 9.99,
-      interval: 'monthly',
-      startDate: '2026-09-15T00:00:00.000Z',
-      creatorId,
-    });
+    const groupId = new mongoose.Types.ObjectId().toString();
+    const paidBy = new mongoose.Types.ObjectId().toString();
+    const res = await request(app)
+      .post('/api/recurring-expenses')
+      .send({
+        groupId,
+        paidBy,
+        amount: 9.99,
+        frequency: 'monthly',
+        nextBillingDate: new Date('2026-09-15T00:00:00.000Z'),
+        splits: [{ user: paidBy, amount: 9.99 }],
+      });
 
     expect(res.statusCode).toBe(201);
-    expect(res.body.title).toBe('Spotify');
-    expect(res.body.nextDate).toBeDefined();
+    expect(res.body.amount).toBe(9.99);
+    expect(res.body.frequency).toBe('monthly');
   });
 
-  it('should fetch all recurring expenses via GET /', async () => {
+  it('should fetch all recurring expenses for group via GET /group/:groupId', async () => {
+    const groupId = new mongoose.Types.ObjectId();
+    const paidBy = new mongoose.Types.ObjectId();
     await RecurringExpense.create({
-      title: 'Gym',
+      groupId,
+      paidBy,
       amount: 50.0,
-      interval: 'monthly',
-      startDate: new Date('2026-09-01T00:00:00.000Z'),
-      creatorId: new mongoose.Types.ObjectId(),
+      frequency: 'monthly',
+      nextBillingDate: new Date('2026-09-01T00:00:00.000Z'),
+      splits: [{ user: paidBy, amount: 50.0 }],
     });
 
-    const res = await request(app).get('/api/recurring-expenses');
+    const res = await request(app).get(`/api/recurring-expenses/group/${groupId}`);
     expect(res.statusCode).toBe(200);
     expect(res.body.length).toBe(1);
-    expect(res.body[0].title).toBe('Gym');
+    expect(res.body[0].amount).toBe(50.0);
   });
 });
