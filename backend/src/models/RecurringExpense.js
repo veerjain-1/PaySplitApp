@@ -53,23 +53,25 @@ recurringExpenseSchema.pre('save', function (next) {
   if (this.isModified('frequency') || !this.nextBillingDate) {
     this.nextBillingDate = this.calculateNextDate(new Date());
   }
-  next();
+  if (typeof next === 'function') {
+    next();
+  }
 });
 
 recurringExpenseSchema.methods.calculateNextDate = function (fromDate) {
   const nextDate = new Date(fromDate);
   switch (this.frequency) {
     case 'daily':
-      nextDate.setDate(nextDate.getDate() + 1);
+      nextDate.setUTCDate(nextDate.getUTCDate() + 1);
       break;
     case 'weekly':
-      nextDate.setDate(nextDate.getDate() + 7);
+      nextDate.setUTCDate(nextDate.getUTCDate() + 7);
       break;
     case 'monthly':
-      nextDate.setMonth(nextDate.getMonth() + 1);
+      nextDate.setUTCMonth(nextDate.getUTCMonth() + 1);
       break;
     case 'yearly':
-      nextDate.setFullYear(nextDate.getFullYear() + 1);
+      nextDate.setUTCFullYear(nextDate.getUTCFullYear() + 1);
       break;
   }
   return nextDate;

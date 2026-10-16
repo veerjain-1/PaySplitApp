@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node src/app.js",
     "lint": "eslint .",
     "format": "prettier --write ."
@@ -20,7 +20,8 @@
     "express": "^5.2.1",
     "firebase-admin": "^14.2.0",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.9.1"
+    "mongoose": "^9.9.1",
+    "socket.io": "^4.8.4"
   },
   "devDependencies": {
     "eslint": "^10.11.0",

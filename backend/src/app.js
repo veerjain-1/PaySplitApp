@@ -1,4 +1,6 @@
 const express = require('express');
+const http = require('http');
+const { initSocket } = require('./socket');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
@@ -38,7 +40,9 @@ if (process.env.NODE_ENV !== 'test') {
     .catch((err) => logger.warn('MongoDB connection error (ignoring for dev):', err.message));
 
   const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
+  const server = http.createServer(app);
+  initSocket(server);
+  server.listen(PORT, () => {
     logger.info(`Server running on port ${PORT}`);
   });
 }
