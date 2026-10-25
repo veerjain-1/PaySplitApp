@@ -19,6 +19,11 @@ const expenseSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Group',
   },
+  category: {
+    type: String,
+    trim: true,
+    default: 'General',
+  },
   splitType: {
     type: String,
     enum: ['EQUAL', 'EXACT', 'PERCENTAGE'],
