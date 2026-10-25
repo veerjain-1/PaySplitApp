@@ -21,11 +21,13 @@ const authRoutes = require('./routes/auth');
 const expenseRoutes = require('./routes/expenses');
 const recurringExpensesRoutes = require('./routes/recurringExpenses');
 const groupRoutes = require('./routes/groups');
+const summaryRoutes = require('./routes/summary');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/recurring-expenses', recurringExpensesRoutes);
 app.use('/api/groups', groupRoutes);
+app.use('/api/summary', summaryRoutes);
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', service: 'paysplit-backend' });
