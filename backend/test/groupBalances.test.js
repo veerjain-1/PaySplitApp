@@ -81,4 +81,31 @@ describe('Group balances API', () => {
     expect(res.body.balances).toEqual([]);
     expect(res.body.settlements).toEqual([]);
   });
+
+  describe('POST /api/groups/simplify-debts', () => {
+    it('simplifies arbitrary multi-party debt graphs', async () => {
+      const res = await request(app)
+        .post('/api/groups/simplify-debts')
+        .send({
+          transactions: [
+            { from: 'alice', to: 'bob', amount: 40 },
+            { from: 'bob', to: 'charlie', amount: 40 },
+          ],
+        })
+        .expect(200);
+
+      expect(res.body.originalCount).toBe(2);
+      expect(res.body.simplifiedCount).toBe(1);
+      expect(res.body.transactions).toEqual([{ from: 'alice', to: 'charlie', amount: 40 }]);
+    });
+
+    it('rejects invalid payloads with 400', async () => {
+      const res = await request(app)
+        .post('/api/groups/simplify-debts')
+        .send({ transactions: 'invalid' })
+        .expect(400);
+
+      expect(res.body).toHaveProperty('error');
+    });
+  });
 });
