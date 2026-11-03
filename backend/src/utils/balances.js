@@ -130,4 +130,64 @@ function computeSettlements(netBalances, epsilon = 0.01) {
   return settlements;
 }
 
-module.exports = { resolveSplitAmounts, computeNetBalances, computeSettlements };
+/**
+ * Given an arbitrary list of pairwise directed transactions/debts [{ from, to, amount }],
+ * simplifies the debt graph into the minimal set of transactions by netting
+ * out pairwise balances and resolving cycles.
+ *
+ * Preserves exact net balance conservation for every participant while
+ * minimizing the number and total volume of transactions.
+ *
+ * @param {Array<{ from: string, to: string, amount: number }>} transactions
+ * @param {number} [epsilon=0.01]
+ * @returns {{ transactions: Array<{ from: string, to: string, amount: number }>, originalCount: number, simplifiedCount: number, totalOriginalVolume: number, totalSimplifiedVolume: number }}
+ */
+function simplifyDebtGraph(transactions = [], epsilon = 0.01) {
+  if (!Array.isArray(transactions) || transactions.length === 0) {
+    return {
+      transactions: [],
+      originalCount: 0,
+      simplifiedCount: 0,
+      totalOriginalVolume: 0,
+      totalSimplifiedVolume: 0,
+    };
+  }
+
+  const netBalances = new Map();
+  let totalOriginalVolume = 0;
+
+  for (const tx of transactions) {
+    const from = String(tx.from);
+    const to = String(tx.to);
+    const amount = Number(tx.amount) || 0;
+
+    if (amount <= 0 || from === to) continue;
+
+    totalOriginalVolume += amount;
+    netBalances.set(from, (netBalances.get(from) || 0) - amount);
+    netBalances.set(to, (netBalances.get(to) || 0) + amount);
+  }
+
+  // Round balances to prevent float errors
+  for (const [userId, bal] of netBalances.entries()) {
+    netBalances.set(userId, Math.round(bal * 100) / 100);
+  }
+
+  const simplified = computeSettlements(netBalances, epsilon);
+  const totalSimplifiedVolume = simplified.reduce((sum, tx) => sum + tx.amount, 0);
+
+  return {
+    transactions: simplified,
+    originalCount: transactions.length,
+    simplifiedCount: simplified.length,
+    totalOriginalVolume: Math.round(totalOriginalVolume * 100) / 100,
+    totalSimplifiedVolume: Math.round(totalSimplifiedVolume * 100) / 100,
+  };
+}
+
+module.exports = {
+  resolveSplitAmounts,
+  computeNetBalances,
+  computeSettlements,
+  simplifyDebtGraph,
+};

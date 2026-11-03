@@ -2,6 +2,7 @@ const {
   resolveSplitAmounts,
   computeNetBalances,
   computeSettlements,
+  simplifyDebtGraph,
 } = require('../src/utils/balances');
 
 describe('balances utils', () => {
@@ -133,6 +134,43 @@ describe('balances utils', () => {
         ['b', 0],
       ]);
       expect(computeSettlements(net)).toEqual([]);
+    });
+  });
+
+  describe('simplifyDebtGraph', () => {
+    it('simplifies a 3-person transitive debt chain A -> B -> C into A -> C', () => {
+      const transactions = [
+        { from: 'alice', to: 'bob', amount: 50 },
+        { from: 'bob', to: 'carol', amount: 50 },
+      ];
+      const result = simplifyDebtGraph(transactions);
+      expect(result.originalCount).toBe(2);
+      expect(result.simplifiedCount).toBe(1);
+      expect(result.transactions).toEqual([{ from: 'alice', to: 'carol', amount: 50 }]);
+      expect(result.totalOriginalVolume).toBe(100);
+      expect(result.totalSimplifiedVolume).toBe(50);
+    });
+
+    it('cancels out a circular debt loop A -> B -> C -> A', () => {
+      const transactions = [
+        { from: 'alice', to: 'bob', amount: 30 },
+        { from: 'bob', to: 'carol', amount: 30 },
+        { from: 'carol', to: 'alice', amount: 30 },
+      ];
+      const result = simplifyDebtGraph(transactions);
+      expect(result.simplifiedCount).toBe(0);
+      expect(result.transactions).toEqual([]);
+      expect(result.totalSimplifiedVolume).toBe(0);
+    });
+
+    it('handles empty input gracefully', () => {
+      expect(simplifyDebtGraph([])).toEqual({
+        transactions: [],
+        originalCount: 0,
+        simplifiedCount: 0,
+        totalOriginalVolume: 0,
+        totalSimplifiedVolume: 0,
+      });
     });
   });
 });

@@ -12,24 +12,37 @@ const logger = require('./utils/logger');
 
 const app = express();
 
+const rateLimiter = require('./middleware/rateLimiter');
+const errorHandler = require('./middleware/errorHandler');
+
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Apply rate limiter outside test suites to protect production APIs
+if (process.env.NODE_ENV !== 'test') {
+  app.use(rateLimiter);
+}
 
 // Routes
 const authRoutes = require('./routes/auth');
 const expenseRoutes = require('./routes/expenses');
 const recurringExpensesRoutes = require('./routes/recurringExpenses');
 const groupRoutes = require('./routes/groups');
+const summaryRoutes = require('./routes/summary');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/recurring-expenses', recurringExpensesRoutes);
 app.use('/api/groups', groupRoutes);
+app.use('/api/summary', summaryRoutes);
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', service: 'paysplit-backend' });
 });
+
+// Centralized error handling
+app.use(errorHandler);
 
 // Start server and connect to DB only if not in test mode
 if (process.env.NODE_ENV !== 'test') {
